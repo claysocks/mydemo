@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        table{
+            width:1000px;
+            border-collapse:collapse;
+            text-align: center;
+        }
+        td,th{
+            border:1px solid #ccc;
+            text-align:center;
+            line-height:40px;
+        }
+        .formCenter {
+            background-color: aquamarine;
+            width: 50%;
+            margin: 0 auto;
+            border: solid 1px #ff0000
+        }
+
+        body {
+            text-align: center
+        }
+    </style>
+</head>
+<body>
+<h1 align="center">查看图书系统</h1>
+<p align=center><input type="button" value="查看图书系统" id='btnAjax'></p>
+<div class="formCenter">
+<table id="companyList"  class="formCenter">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>公司名称</th>
+        <th>法人名称</th>
+        <th>成立日期</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="listEntityName"></tbody>
+</table>
+</div>
+<script type="text/javascript">
+    document.getElementById('companyList').style.display = 'none';
+    document.querySelector('#btnAjax').onclick = function () {
+        let ajaxObj = new XMLHttpRequest();
+        ajaxObj.open('get', '/book/allBook.do');
+        ajaxObj.send();
+        ajaxObj.onreadystatechange = function () {
+            if (ajaxObj.readyState==4&&ajaxObj.status==200) {
+                let jsObj = JSON.parse(ajaxObj.responseText).list;
+                let str = '';
+                for (let i = 0; i <jsObj.length ; i++) {
+                let newList=Object.assign({},jsObj[i]);
+                    str += `<tr>
+                                <td><span>${newList.id}</span></td>
+                                <td><span>${newList.bookName}</span></td>
+                                <td><span>${newList.bookCounts}</span></td>
+                                <td><span>${newList.storageTime}</span></td>
+                                <td><span>${newList.detail}</span></td>
+                            </tr>`
+                }
+                document.getElementById('companyList').style.display = 'block';
+                document.getElementById('listEntityName').innerHTML = str;
+            }
+        }
+    }
+</script>
+</body>
+</html>
